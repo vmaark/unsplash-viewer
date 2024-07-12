@@ -5,20 +5,33 @@ import { useQuery } from "@tanstack/react-query";
 import { ChangeEventHandler, FC, useRef, useState } from "react";
 import { Pagination } from "./Pagination";
 import { unsplash } from "../unsplash";
+import { ColorId } from "unsplash-js";
+import { ColorPicker } from "./ColorPicker";
 
 export const Viewer: FC = () => {
   const [searchTerm, setSearchTerm] = useState("magic");
   const inputRef = useRef<HTMLInputElement>(null);
   const [orderBy, setOrderBy] = useState<"latest" | "relevant">("relevant");
+  const [colorFilter, setColorFilter] = useState<ColorId | undefined>(
+    undefined,
+  );
   const onOptionChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setOrderBy(e.target.value as "latest" | "relevant");
   };
 
+  console.log("colorFilter", colorFilter);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
 
   const query = useQuery({
-    queryKey: ["unsplash", searchTerm, page, perPage, orderBy] as const,
+    queryKey: [
+      "unsplash",
+      searchTerm,
+      page,
+      perPage,
+      orderBy,
+      colorFilter,
+    ] as const,
     queryFn: async ({ queryKey }) => {
       const [, searchTerm, page, perPage, orderBy] = queryKey;
 
@@ -27,7 +40,7 @@ export const Viewer: FC = () => {
         page,
         perPage,
         orderBy,
-        color: "green",
+        color: colorFilter,
         orientation: "portrait",
       });
 
@@ -54,25 +67,28 @@ export const Viewer: FC = () => {
         />
         <button type="submit">Search</button>
       </form>
-      <div className="flex flex-row gap-2">
-        <input
-          type="radio"
-          name="relevant"
-          value="relevant"
-          id="relevant"
-          checked={orderBy === "relevant"}
-          onChange={onOptionChange}
-        />
-        <label htmlFor="relevant">relevant</label>
-        <input
-          type="radio"
-          name="latest"
-          value="latest"
-          id="latest"
-          checked={orderBy === "latest"}
-          onChange={onOptionChange}
-        />
-        <label htmlFor="latest">latest</label>
+      <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-2">
+          <input
+            type="radio"
+            name="relevant"
+            value="relevant"
+            id="relevant"
+            checked={orderBy === "relevant"}
+            onChange={onOptionChange}
+          />
+          <label htmlFor="relevant">relevant</label>
+          <input
+            type="radio"
+            name="latest"
+            value="latest"
+            id="latest"
+            checked={orderBy === "latest"}
+            onChange={onOptionChange}
+          />
+          <label htmlFor="latest">latest</label>
+        </div>
+        <ColorPicker color={colorFilter} setColor={setColorFilter} />
       </div>
       <div className="flex flex-1 flex-col items-center">
         {query.isError && <div>Error: {query.error.message}</div>}
