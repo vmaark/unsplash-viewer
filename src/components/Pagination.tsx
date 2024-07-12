@@ -8,23 +8,26 @@ export const Pagination: FC<{
   setPage: Dispatch<SetStateAction<number>>;
 }> = ({ total, totalPages, page, setPage }) => {
   return (
-    <div className="flex flex-row gap-2">
-      <button
-        disabled={page === 1 || total == undefined}
-        onClick={() => {
-          setPage((v) => v - 1);
-        }}
-      >
-        {"<"}
-      </button>
-      <button
-        disabled={totalPages == undefined || page >= totalPages}
-        onClick={() => {
-          setPage((v) => v + 1);
-        }}
-      >
-        {">"}
-      </button>
+    <div className="flex flex-row gap-6">
+      {total != undefined && <span>{`${total} results`}</span>}
+      <div className="flex flex-row gap-2">
+        <button
+          disabled={page === 1 || total == undefined}
+          onClick={() => {
+            setPage((v) => v - 1);
+          }}
+        >
+          {"<"}
+        </button>
+        <button
+          disabled={totalPages == undefined || page >= totalPages}
+          onClick={() => {
+            setPage((v) => v + 1);
+          }}
+        >
+          {">"}
+        </button>
+      </div>
       {totalPages != undefined && <span>{`${page}/${totalPages}`}</span>}
     </div>
   );
