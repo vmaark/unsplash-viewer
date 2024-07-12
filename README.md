@@ -1,3 +1,6 @@
+Regular nextjs setup, add NEXT_PUBLIC_UNSPLASH_ACCESS_KEY to .env, `yarn install` && `yarn dev`.
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
